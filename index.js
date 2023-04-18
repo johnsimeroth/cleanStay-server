@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const gapi = require('./server/controllers/gCalApi.js');
 // const routes = require('./server/routes');
@@ -15,8 +16,16 @@ app.get('/reservations', (req, res) => {
       events.forEach((event) => {
         console.log(event.start.date)
       })
+      console.log(events[0]);
+      res.status(200).send(events);
     })
-    .catch(console.error);
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send(err);
+    });
 });
 
 
+const port = process.env.PORT || 3000;
+app.listen(port);
+console.log(`now listening at port http://localhost:${port}`)
