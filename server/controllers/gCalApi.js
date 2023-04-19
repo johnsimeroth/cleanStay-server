@@ -11,7 +11,6 @@ const { google } = require('googleapis');
 const scopes = ['https://www.googleapis.com/auth/calendar.readonly'];
 const tokenPath = path.join(cwd(), 'secrets', 'token.json');
 const credentialsPath = path.join(cwd(), 'secrets', 'credentials.json');
-const calID = 'l4qofj1b6ppj8db32aocfl40nhj80srt@import.calendar.google.com'
 
 const loadCredentials = async () => {
   try {
@@ -51,19 +50,25 @@ const authorize = async () => {
   return client;
 }
 
-async function listEvents(auth) {
+async function listEvents(auth, calID) {
   const calendar = google.calendar({version: 'v3', auth});
+  const minDate = new Date();
+  let maxDate = new Date();
+  maxDate.setDate(minDate.getDate() + 7);
   const res = await calendar.events.list({
     calendarId: calID,
-    timeMin: new Date().toISOString(),
+    timeMin: minDate.toISOString(),
+    timeMax: maxDate.toISOString(),
     singleEvents: true,
     orderBy: 'startTime',
   });
   return res.data.items;
 }
 
-module.exports = function authAndList() {
+module.exports = function authAndList(calIDs) {
   return authorize()
-    .then(listEvents)
+    .then((client) => {
+      return Promise.all(calIDs.map((id) => listEvents(client, id)))
+    })
     .catch(console.error);
 }
