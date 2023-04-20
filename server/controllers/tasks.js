@@ -1,8 +1,8 @@
 const db = require('../../db');
 
 async function getTasks (property) {
-  await db.task.updateCleans(property.details.id, property.reservations);
-  return db.task.getAll(property.details.id);
+  await db.task.updateCleans(property.details.id, property.details.name, property.reservations);
+  return db.task.getAllIncompleteByProp(property.details.id);
 }
 
 
@@ -13,3 +13,5 @@ exports.appendTasks = async function getAndAppendTasksForAllProperties (properti
   });
   return properties;
 }
+
+exports.update = db.task.updateById;

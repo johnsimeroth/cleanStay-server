@@ -30,10 +30,12 @@ function getNextReservationStart(property) {
 const propertyDetailsKey = [
   {
     address: '564 Kimball',
+    name: '564 Kimball',
     id: 'l4qofj1b6ppj8db32aocfl40nhj80srt@import.calendar.google.com',
   },
   {
     address: '566 Kimball',
+    name: '566 Kimball',
     id: 'pve7d4grgb0rgbm4a1q94piqeloq60u0@import.calendar.google.com',
   },
 ];
@@ -60,6 +62,15 @@ app.get('/properties', async (req, res) => {
     res.status(500).send(err);
   }
 });
+
+app.put('/tasks/:taskID', (req, res) => {
+  task.update(req.params.taskID, req.body)
+    .then(() => res.sendStatus(200))
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send(err);
+    });
+})
 
 
 const port = process.env.PORT || 3000;

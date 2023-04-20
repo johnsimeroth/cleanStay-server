@@ -8,8 +8,11 @@ exports.save = function (tasksArray) {
   return Task.create(tasksArray);
 };
 
-exports.getAll = function (propertyID) {
-  return Task.find({propertyID: propertyID});
+exports.getAllIncompleteByProp = function (propertyID) {
+  return Task.find({
+    propertyID: propertyID,
+    complete: false,
+  });
 };
 
 exports.getAllCleansForProperty = function (propertyID) {
@@ -19,13 +22,15 @@ exports.getAllCleansForProperty = function (propertyID) {
   });
 };
 
-exports.updateCleans = async function (propertyID, resArray) {
+exports.updateCleans = async function (propertyID, propertyName, resArray) {
   const tasks = resArray.map(reservation => ({
     type: 'clean',
     reservationID: reservation.id,
+    description: 'Clean for next guest',
     due: new Date(reservation.start.date + 'T12:00:00.000' ),
     priority: 1,
     propertyID: propertyID,
+    propertyName: propertyName,
   }));
   const newTasks = [];
     for (let task of tasks) {
@@ -37,3 +42,7 @@ exports.updateCleans = async function (propertyID, resArray) {
   console.log(newTasks.length);
   return Task.create(newTasks);
 };
+
+exports.updateById = function (id, update) {
+  return Task.findByIdAndUpdate(id, update);
+}

@@ -11,6 +11,10 @@ const taskSchema = new mongoose.Schema({
     required: false,
     index: true,
   },
+  description: {
+    type: String,
+    required: true,
+  },
   scheduled: {
     type: Date,
     required: false,
@@ -18,6 +22,11 @@ const taskSchema = new mongoose.Schema({
   due: {
     type: Date,
     required: false,
+  },
+  complete: {
+    type: Boolean,
+    required: true,
+    default: false,
   },
   invoiceID: {
     type: String,
@@ -33,7 +42,11 @@ const taskSchema = new mongoose.Schema({
     type: String,
     required: true,
     index: true,
-  }
+  },
+  propertyName: {
+    type: String,
+    required: true,
+  },
 });
 
 const Task = mongoose.model('Task', taskSchema);
