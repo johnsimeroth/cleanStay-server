@@ -8,8 +8,8 @@ exports.save = function (tasksArray) {
   return Task.create(tasksArray);
 };
 
-exports.getAll = function () {
-  return Task.find({});
+exports.getAll = function (propertyID) {
+  return Task.find({propertyID: propertyID});
 };
 
 exports.getAllCleansForProperty = function (propertyID) {
@@ -27,9 +27,13 @@ exports.updateCleans = async function (propertyID, resArray) {
     priority: 1,
     propertyID: propertyID,
   }));
-  const newTasks = await Promise.all(tasks.filter(async (task) => (
-    Task.find({ reservationID: task.reservationID }) === null
-    )
-  ));
+  const newTasks = [];
+    for (let task of tasks) {
+      const existingTask = await Task.findOne({ reservationID: task.reservationID }).exec();
+      if (existingTask === null) {
+        newTasks.push(task);
+      }
+    }
+  console.log(newTasks.length);
   return Task.create(newTasks);
 };

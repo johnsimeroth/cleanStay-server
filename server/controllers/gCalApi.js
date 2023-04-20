@@ -65,6 +65,8 @@ async function listEvents(auth, calID) {
   return res.data.items;
 }
 
+// accepts an array of calendar ids, and returns an array of the results for
+// each property, which itself is an array of event objects.
 module.exports = function authAndList(calIDs) {
   return authorize()
     .then((client) => {
